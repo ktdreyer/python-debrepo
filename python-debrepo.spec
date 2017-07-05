@@ -7,7 +7,7 @@
 %define srcname debrepo
 
 Name:           python-%{srcname}
-Version:        0.0.1
+Version:        0.0.3
 Release:        1%{?dist}
 Summary:        Inspect and compare Debian repositories
 License:        GPLv3+
@@ -15,7 +15,8 @@ URL:            https://pagure.io/debrepo
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 
 
-BuildRequires:  python-devel >= 2.6
+BuildRequires:  python2-devel
+BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
@@ -36,6 +37,8 @@ composes.
 Summary:        %{summary}
 %{?python_provide:%python_provide python2-%{srcname}}
 Requires:       python-debian
+# https://bugs.debian.org/858906
+Requires:       python2-chardet
 
 %description -n python2-%{srcname}
 debrepo is a library for inspecting composes of Debian repositories and
@@ -48,8 +51,9 @@ composes.
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        %{summary}
-Requires:       python3
 Requires:       python3-debian
+# https://bugs.debian.org/858906
+Requires:       python3-chardet
 %{?python_provide:%python_provide python3-%{srcname}}
 
 %description -n python3-%{srcname}
@@ -84,24 +88,31 @@ sed -i -e 's|#!/usr/bin/env python|#!/usr/bin/python3|' \
 %endif # with_python3
 
 %files -n python2-%{srcname}
+%license LICENSE.rst
 %doc README.rst
-# https://pagure.io/debrepo/pull-request/1
-#%%license GPL
-%{python_sitelib}/*
+%{python_sitelib}/%{srcname}/
+%{python_sitelib}/%{srcname}-%{version}-py%{python_version}.egg-info/
 %if ! 0%{?with_python3}
 %{_bindir}/debrepodiff
 %endif
 
 %if 0%{?with_python3}
 %files -n python3-%{srcname}
+%license LICENSE.rst
 %doc README.rst
-# https://pagure.io/debrepo/pull-request/1
-#%%license GPL
-%{python3_sitelib}/*
+%{python3_sitelib}/%{srcname}/
+%{python3_sitelib}/%{srcname}-%{version}-py%{python3_version}.egg-info/
 %{_bindir}/debrepodiff
 %endif # with_python3
 
 
 %changelog
+* Mon Jul 03 2017 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.0.3-1
+- Update to latest upstream release
+- Drop Requires: python3
+- Require chardet
+- Include LICENSE.rst
+- More precise sitelib contents
+
 * Mon Mar 13 2017 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.0.1-1
 - initial package
