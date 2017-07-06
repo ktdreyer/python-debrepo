@@ -4,18 +4,17 @@
 %global with_python3 1
 %endif
 
-%define srcname debrepo
+%global srcname debrepo
 
 Name:           python-%{srcname}
 Version:        0.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Inspect and compare Debian repositories
 License:        GPLv3+
 URL:            https://pagure.io/debrepo
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 
 
-BuildRequires:  python2-devel
 BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
 %if 0%{?with_python3}
@@ -107,6 +106,10 @@ sed -i -e 's|#!/usr/bin/env python|#!/usr/bin/python3|' \
 
 
 %changelog
+* Thu Jul 06 2017 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.0.3-2
+- Drop duplicate BuildRequires: python2-devel
+- Use %%global macro instead of %%define
+
 * Mon Jul 03 2017 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.0.3-1
 - Update to latest upstream release
 - Drop Requires: python3
